@@ -54,23 +54,4 @@ public class Employee implements Serializable {
      * @return Employee department
      */
     public String getDepartment() { return department; }
-
-    /**
-     * Setter to update the employee's salary.
-     *
-     * @param salary New salary to set
-     */
-    public void setSalary(double salary) { this.salary = salary; }
-
-    /**
-     * Returns a clean string representation of the employee,
-     * useful for displaying in console outputs.
-     */
-    @Override
-    public String toString() {
-        return "Employee [ID=" + id +
-                ", Name=" + name +
-                ", Salary=" + salary +
-                ", Department=" + department + "]";
-    }
 }
