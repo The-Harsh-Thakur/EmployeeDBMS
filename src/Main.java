@@ -1,93 +1,97 @@
 import model.Employee;
-import model.Manager;
-import util.EmployeeDOA;
+import util.EmployeeDao;
 
 import java.util.Scanner;
 
+/**
+ * Main class for the Employee Management System.
+ * Allows:
+ * - Adding employees (with reportsTo)
+ * - Displaying employees
+ * - Removing employees
+ * - Updating salary
+ * - Making an employee a manager.
+ */
 public class Main {
     public static void main(String[] args) {
-        // Create an instance of EmployeeDatabase to handle all DB operations
-        EmployeeDOA db = new EmployeeDOA();
-
-        // Create a Scanner for user input
+        EmployeeDao db = new EmployeeDao(); // DAO for DB operations
         Scanner sc = new Scanner(System.in);
-        int choice; // variable to store user choice for the menu
+        int choice; // User's menu choice
 
         do {
-            // Display menu options
+            // Display menu
             System.out.println("\n--- Employee Management ---");
             System.out.println("1. Add Employee");
-            System.out.println("2. Add Manager");
-            System.out.println("3. Display All Employees");
-            System.out.println("4. Remove Employee");
-            System.out.println("5. Update Salary");
-            System.out.println("6. Exit");
+            System.out.println("2. Display All Employees");
+            System.out.println("3. Remove Employee");
+            System.out.println("4. Update Employee (Salary / Make Manager)");
+            System.out.println("5. Exit");
             System.out.print("Enter your choice: ");
-            choice = sc.nextInt(); // read user choice
+            choice = sc.nextInt();
+            sc.nextLine(); // Consume newline
 
-            // Handle user choice using switch-case
             switch (choice) {
                 case 1 -> {
-                    // Add Employee
-                    System.out.print("ID: ");
-                    int id = sc.nextInt();
-                    sc.nextLine(); // consume leftover newline
+                    // Add Employee with reportsTo
+                    System.out.print("Employee ID (alphanumeric): ");
+                    String id = sc.nextLine();
                     System.out.print("Name: ");
                     String name = sc.nextLine();
                     System.out.print("Salary: ");
                     double salary = sc.nextDouble();
-                    sc.nextLine(); // consume leftover newline
+                    sc.nextLine(); // consume newline
                     System.out.print("Department: ");
                     String department = sc.nextLine();
-                    // Add a new Employee (non-manager) to the database
-                    db.addEmployee(new Employee(id, name, salary, department));
+                    System.out.print("Enter Manager ID to whom this employee reports (or leave blank if none): ");
+                    String reportsTo = sc.nextLine();
+                    if (reportsTo.isBlank()) {
+                        reportsTo = null; // Treat blank as null
+                    }
+
+                    db.addEmployee(new Employee(id, name, salary, department, reportsTo));
                 }
                 case 2 -> {
-                    // Add Manager
-                    System.out.print("ID: ");
-                    int id = sc.nextInt();
-                    sc.nextLine(); // consume leftover newline
-                    System.out.print("Name: ");
-                    String name = sc.nextLine();
-                    System.out.print("Salary: ");
-                    double salary = sc.nextDouble();
-                    sc.nextLine(); // consume leftover newline
-                    System.out.print("Department: ");
-                    String department = sc.nextLine();
-                    // Add a new Manager to the database
-                    db.addEmployee(new Manager(id, name, salary, department));
-                }
-                case 3 -> {
-                    // Display all employees from the database
+                    // Display all employees
                     db.displayAll();
                 }
-                case 4 -> {
-                    // Remove an employee by ID
-                    System.out.print("Enter ID to remove: ");
-                    int id = sc.nextInt();
+                case 3 -> {
+                    // Remove employee by ID
+                    System.out.print("Enter Employee ID to remove: ");
+                    String id = sc.nextLine();
                     db.removeEmployee(id);
                 }
-                case 5 -> {
-                    // Update an employee's salary
-                    System.out.print("Enter ID to update salary: ");
-                    int id = sc.nextInt();
-                    System.out.print("New Salary: ");
-                    double newSalary = sc.nextDouble();
-                    db.updateSalary(id, newSalary);
+                case 4 -> {
+                    // Update section: allows making manager or updating salary
+                    System.out.println("1. Update Salary");
+                    System.out.println("2. Make Manager");
+                    System.out.print("Enter your choice: ");
+                    int updateChoice = sc.nextInt();
+                    sc.nextLine(); // consume newline
+
+                    if (updateChoice == 1) {
+                        // Update salary
+                        System.out.print("Enter Employee ID: ");
+                        String id = sc.nextLine();
+                        System.out.print("Enter New Salary: ");
+                        double newSalary = sc.nextDouble();
+                        sc.nextLine(); // consume newline
+
+                        db.updateSalary(id, newSalary);
+                    } else if (updateChoice == 2) {
+                        // Make Manager
+                        System.out.print("Enter Employee ID to promote to Manager: ");
+                        String empId = sc.nextLine();
+                        db.makeManager(empId);
+                    } else {
+                        System.out.println("Invalid choice for update.");
+                    }
                 }
-                case 6 -> {
-                    // Exit the program
-                    System.out.println("Exiting...");
-                }
-                default -> {
-                    // Handle invalid input
-                    System.out.println("Invalid choice. Please try again.");
-                }
+                case 5 -> System.out.println("Exiting...");
+                default -> System.out.println("Invalid choice, please try again.");
             }
 
-        } while (choice != 6); // continue until user chooses to exit
+        } while (choice != 5);
 
-        // Close the scanner to free resources
-        sc.close();
+        sc.close(); // Free resources
     }
 }
