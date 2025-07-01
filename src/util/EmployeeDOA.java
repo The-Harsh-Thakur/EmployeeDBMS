@@ -14,7 +14,7 @@ import java.sql.*;
  *
  * Uses MySQL via JDBC.
  */
-public class EmployeeDatabase {
+public class EmployeeDOA {
 
     // Database connection details
     private final String JDBC_URL = "jdbc:mysql://localhost:3306/employeedb";

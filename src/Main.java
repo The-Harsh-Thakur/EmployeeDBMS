@@ -1,13 +1,13 @@
 import model.Employee;
 import model.Manager;
-import util.EmployeeDatabase;
+import util.EmployeeDOA;
 
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         // Create an instance of EmployeeDatabase to handle all DB operations
-        EmployeeDatabase db = new EmployeeDatabase();
+        EmployeeDOA db = new EmployeeDOA();
 
         // Create a Scanner for user input
         Scanner sc = new Scanner(System.in);
